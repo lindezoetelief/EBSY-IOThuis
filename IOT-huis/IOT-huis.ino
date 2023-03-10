@@ -1,3 +1,10 @@
+#include <dht.h>
+#include <LiquidCrystal.h>
+dht DHT;
+
+#define DHT11_PIN 2
+
+LiquidCrystal lcd(I2C_1);
 //Leds
 int led1Pin = 10;
 int led2Pin = 9;
@@ -27,6 +34,8 @@ void setup() {
   buttonState = digitalRead(switch1Pin);
   button2State = digitalRead(switch2Pin);
   Serial.begin(9600);
+  lcd.begin(16, 2);
+  lcd.print("hello, world!");
 }
 
 void loop() {
@@ -86,4 +95,22 @@ void loop() {
     }
   }
   button2State = val3;
+
+  int chk = DHT.read11(DHT11_PIN);
+  Serial.print("Temperature = ");
+  Serial.println(DHT.temperature);
+  Serial.print("Humidity = ");
+  Serial.println(DHT.humidity);
+  delay(1000);
+
+  lcd.setCursor(0,0); 
+  lcd.print("Temp: ");
+  lcd.print(DHT.temperature);
+  lcd.print((char)223);
+  lcd.print("C");
+  lcd.setCursor(0,1);
+  lcd.print("Humidity: ");
+  lcd.print(DHT.humidity);
+  lcd.print("%");
+  delay(1000);
 }
